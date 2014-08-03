@@ -78,6 +78,8 @@ sub prepare_reduced_branch {
     # Create lookup tables for test files to be included in, 
     # or excluded from, the reduced branch.
     my %included = map { +qq{$self->{params}->{dir}/$_} => 1 } @includes;
+say STDERR "XXX:";
+say STDERR Dumper \%included;
     my %excluded = map { +qq{$self->{params}->{dir}/$_} => 1 } @excludes;
     my @removed = ();
     if ($self->{params}->{include}) {
