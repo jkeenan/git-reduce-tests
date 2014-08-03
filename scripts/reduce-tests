@@ -15,3 +15,136 @@ $self->push_to_remote($reduced_branch);
 
 exit 0;
 
+__END__
+
+=head1 NAME
+
+reduce-options - Create a branch with fewer test files for faster development
+
+=head1 SYNOPSIS
+
+  reduce-options \
+    --dir=/path/to/git/workdir \
+    --include=t/90-load.t,t/91-unload.t \
+    --branch=master \
+    --prefix=smoke-me \
+    --remote=origin \
+    --verbose
+
+=head1 DESCRIPTION
+
+F<reduce-options> is a command-line utility which will be useful in the
+following situation:
+
+=over 4
+
+=item *
+
+You have a Perl library stored in a git repository.
+
+=item *
+
+You have a large test suite for that library which takes a non-trivial length
+of time to run.
+
+=item *
+
+You wish to run only a subset of those tests.
+
+=back
+
+F<reduce-options> enables you to copy a branch, remove files from that
+branch's test suite and run that reduced test suite.  The test suite may be
+reduced either by:
+
+=over 4
+
+=item *
+
+Specifying only those test files you wish to include
+(C<include=t/firstfile,t/secondfile>); or
+
+=item *
+
+Specifying all the test files you wish to exclude
+(C<exclude=t/thirdfile,t/fourthfile>).
+
+=back
+
+This program is likely to be particularly useful in the situation where:
+
+=over 4
+
+=item *
+
+You are required to push all branches to a smoke server for testing.
+
+=item *
+
+That smoke-testing is activated by prefixing your remote branch with a
+string which your smoke-server recognizes as a request for a smoke run.
+
+=item *
+
+The smoke server is taking an inordinately long time to complete its test runs
+and/or is reporting failures in test files which you cannot reproduce in your
+development environment (I<heisenfails>).  If you have no immediate control
+over that smoke server, you can at least speed up your development cycle by
+running only the part of the test suite you need to focus on at a given
+moment.
+
+=back
+
+=head1 IMPLEMENTATION
+
+F<reduce-tests> is implemented by CPAN distribution Git-Reduce-Tests.
+
+=head1 BUGS
+
+There are no bug reports outstanding as of the most recent 
+CPAN upload date of this distribution.
+
+=head1 SUPPORT
+
+Please report any bugs by mail to C<bug-Git-Reduce-Tests@rt.cpan.org> 
+or through the web interface at L<http://rt.cpan.org>.
+
+=head1 AUTHOR
+
+James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please 
+include 'reduce-tests' or 'Git-Reduce-Tests' in your subject line.
+
+Creation date:  August 03 2014. Last modification date:  August 03 2014.
+
+Development repository: L<https://github.com/jkeenan/git-reduce-tests>
+
+=head1 COPYRIGHT
+
+Copyright (c) 2014 James E. Keenan.  United States.  All rights reserved. 
+This is free software and may be distributed under the same terms as Perl
+itself.
+
+=head1 DISCLAIMER OF WARRANTY
+
+BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
+OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
+PROVIDE THE SOFTWARE ''AS IS'' WITHOUT WARRANTY OF ANY KIND, EITHER
+EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
+ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH
+YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
+NECESSARY SERVICING, REPAIR, OR CORRECTION.
+
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE
+LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL,
+OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE
+THE SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
+
+=cut
