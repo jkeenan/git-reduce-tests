@@ -8,29 +8,29 @@ use feature 'say';
 use Cwd;
 
 my ($params);
+my @include_args = ("--include", "t/001-load.t"); 
 
-$params = process_options();
-for my $o ( qw|
-    dir
-    branch
-    prefix
-    remote
-    no_delete
-    no_push
-    verbose
-    | ) {
-    ok(defined $params->{$o}, "'$o' option defined");
-}
-for my $o ( qw|
-    include
-    exclude
-    | ) {
-    ok(! $params->{$o}, "'$o' option empty");
+{
+    local @ARGV = (@include_args);
+    $params = process_options();
+    for my $o ( qw|
+        dir
+        branch
+        prefix
+        remote
+        no_delete
+        no_push
+        verbose
+        | ) {
+        ok(defined $params->{$o}, "'$o' option defined");
+    }
+    ok(  length($params->{include}), "'include' option populated");
+    ok(! length($params->{exclude}), "'exclude' option not populated");
 }
 
 {
     my $phony_dir = "/tmp/abcdefghijklmnop_foobar";
-    local @ARGV = ("--dir", $phony_dir, "verbose");
+    local @ARGV = ("--dir", $phony_dir, "verbose", @include_args);
     local $@;
     eval { $params = process_options(); };
     like($@, qr/Could not locate directory $phony_dir/,
@@ -40,7 +40,7 @@ for my $o ( qw|
 {
     my $phony_dir = "/tmp/abcdefghijklmnop_foobar";
     local $@;
-    eval { $params = process_options("dir" => $phony_dir); };
+    eval { $params = process_options("dir" => $phony_dir, @include_args); };
     like($@, qr/Could not locate directory $phony_dir/,
         "Die on non-existent directory $phony_dir provided to process_options()");
 }
@@ -48,7 +48,7 @@ for my $o ( qw|
 {
     my $cwd = cwd();
     my $phony_dir = "/tmp/abcdefghijklmnop_foobar";
-    local @ARGV = ("--dir", $phony_dir);
+    local @ARGV = ("--dir", $phony_dir, @include_args);
     $params = process_options("dir" => $cwd);
     is($params->{dir}, $cwd,
         "Argument provided directly to process_options supersedes command-line argument");
@@ -72,6 +72,7 @@ SKIP: {
     my ($stdout);
     eval { require IO::CaptureOutput; };
     skip "IO::CaptureOutput not installed", 1 if $@;
+    local @ARGV = (@include_args);
     IO::CaptureOutput::capture(
         sub { $params = process_options( "verbose" => 1 ); },
         \$stdout,
@@ -84,7 +85,7 @@ SKIP: {
     my ($stdout);
     eval { require IO::CaptureOutput; };
     skip "IO::CaptureOutput not installed", 1 if $@;
-    local @ARGV = ("--verbose");
+    local @ARGV = ("--verbose", @include_args);
     IO::CaptureOutput::capture(
         sub { $params = process_options(); },
         \$stdout,
@@ -109,5 +110,17 @@ SKIP: {
 
     $params = process_options( 'include'   => $include );
     is($params->{include}, $include, "Got expected include");
+
+    $include = '';
+    $exclude = '';
+    local $@;
+    eval { $params = process_options(
+        'include'   => $include,
+        'exclude'   => $exclude,
+    ); };
+    like($@,
+        qr/Must populate one of 'include' or 'exclude' with test files/,
+        "Die on failure to populate one of 'include' or 'exclude'",
+    );
 }
 

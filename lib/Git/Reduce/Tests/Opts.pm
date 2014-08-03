@@ -69,6 +69,9 @@ sub process_options {
     if ($params{include} and $params{exclude}) {
         croak("'include' and 'exclude' options are mutually exclusive; choose one or the other");
     }
+    if ( ! ($params{include} or $params{exclude}) ) {
+        croak("Must populate one of 'include' or 'exclude' with test files");
+    }
     return \%params;
 }
 
@@ -80,7 +83,7 @@ Git::Reduce::Tests::Opts - Prepare parameters for Git::Reduce::Tests
 
     use Git::Reduce::Tests::Opts qw( process_options );
 
-    my $params = process_options();
+    my $params = process_options( 'include' => 't/001-load.t' );
 
 =head1 DESCRIPTION
 
@@ -92,6 +95,11 @@ approach is useful in testing the subroutine but is not expected to be used
 otherwise.  The subroutine is a wrapper around Getopt::Long::GetOptions(), so
 is devoted to processing command-line arguments provided, for example, to the
 command-line utility F<reduce-tests> included in this CPAN distribution.
+
+Whether the subroutine is populated directly or via command-line arguments,
+one, but not both, of the C<include> or C<exclude> options must be populated
+with the name of a test file to be included in, or excluded from, the reduced
+branch.
 
 The subroutine returns a reference to a hash populated with values in the
 following order:
