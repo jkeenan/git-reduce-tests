@@ -90,7 +90,7 @@ SKIP: {
         sub { $params = process_options(); },
         \$stdout,
     );
-    like($stdout, qr/'verbose'\s*=>\s*1,/s,
+    like($stdout, qr/'verbose'\s*=>\s*1/s,
         "Got expected verbose output: command-line argument");
 }
 
