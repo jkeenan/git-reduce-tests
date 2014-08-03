@@ -110,6 +110,9 @@ SKIP: {
 
     $params = process_options( 'include'   => $include );
     is($params->{include}, $include, "Got expected include");
+    $params = undef;
+    $params = process_options( 'exclude'   => $exclude );
+    is($params->{exclude}, $exclude, "Got expected exclude");
 
     $include = '';
     $exclude = '';
