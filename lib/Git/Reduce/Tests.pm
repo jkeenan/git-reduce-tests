@@ -146,7 +146,7 @@ sub _get_branches {
 
 sub _dump_branches {
     my $self = shift;
-    my $branches = $self->get_branches();
+    my $branches = $self->_get_branches();
     say Dumper $branches;
 }
 
