@@ -61,8 +61,6 @@ sub prepare_reduced_branch {
     my @tfiles = ();
     find( sub { $_ =~ m/\.t$/ and push(@tfiles, $File::Find::name) }, $self->{params}->{dir});
     
-#    my @includes = split(',' => $self->{params}->{include}) if $self->{params}->{include};
-#    my @excludes = split(',' => $self->{params}->{exclude}) if $self->{params}->{exclude};
     my (@includes, @excludes);
     if ($self->{params}->{include}) {
         @includes = split(',' => $self->{params}->{include});
@@ -89,8 +87,6 @@ sub prepare_reduced_branch {
     # Create lookup tables for test files to be included in, 
     # or excluded from, the reduced branch.
     my %included = map { +qq{$self->{params}->{dir}/$_} => 1 } @includes;
-#say STDERR "XXX:";
-#say STDERR Dumper \%included;
     my %excluded = map { +qq{$self->{params}->{dir}/$_} => 1 } @excludes;
     my @removed = ();
     if ($self->{params}->{include}) {
@@ -107,22 +103,20 @@ sub prepare_reduced_branch {
     # Remove undesired teste files and commit the reduced branch.
     $self->{git}->rm(@removed);
     $self->{git}->commit( '-m', "Remove unwanted test files" );
-#    return ($self->{git}, $reduced_branch);
     return ($reduced_branch);
 }
 
-#sub push_to_remote {
-##    my ($params, $git, $reduced_branch) = @_;
-#    my ($self, $reduced_branch) = @_;
-#    unless ($params->{no_push}) {
-#        local $@;
-#        eval { $git->push($params->{remote}, "+$reduced_branch"); };
-#        croak($@) if $@;
-#        say "Pushing '$reduced_branch' to $params->{remote}"
-#            if $params->{verbose};
-#    }
-#    say "Finished!" if $params->{verbose};
-#}
+sub push_to_remote {
+    my ($self, $reduced_branch) = @_;
+    unless ($self->{params}->{no_push}) {
+        local $@;
+        eval { $self->{git}->push($self->{params}->{remote}, "+$reduced_branch"); };
+        croak($@) if $@;
+        say "Pushing '$reduced_branch' to $self->{params}->{remote}"
+            if $self->{params}->{verbose};
+    }
+    say "Finished!" if $self->{params}->{verbose};
+}
 ##### INTERNAL SUBROUTINES #####
 
 sub get_branches {
