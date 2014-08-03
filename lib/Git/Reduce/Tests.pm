@@ -2,91 +2,115 @@ package Git::Reduce::Tests;
 use strict;
 use feature 'say';
 our $VERSION = '0.01';
-our @ISA = qw( Exporter );
-our @EXPORT_OK = qw( run );
+#our @ISA = qw( Exporter );
+#our @EXPORT_OK = qw( run push_to_remote );
 use Git::Wrapper;
 use Carp;
 use Data::Dumper;$Data::Dumper::Indent=1;
 use File::Find qw( find );
 
-sub run {
-    my $opts = shift;
-    my @includes = split(',' => $opts->{include}) if $opts->{include};
-    my @excludes = split(',' => $opts->{exclude}) if $opts->{exclude};
+sub new {
+    my ($class, $params) = @_;
+    my %data;
 
-    my $git = Git::Wrapper->new($opts->{dir});
+    while (my ($k,$v) = each %{$params}) {
+        $data{params}{$k} = $v;
+    }
+    $data{git} = Git::Wrapper->new($params->{dir});
     
-    check_status($git, $opts);
+    # Make sure we can check out the branch needing testing.
+#    check_status($data->{git}, $params);
+    check_status($data{git}, $data{params});
     {
         local $@;
-        eval {$git->checkout($opts->{branch}) };
+        eval {$data{git}->checkout($data{params}->{branch}) };
         croak($@) if $@;
     }
-    
-    my $branches = get_branches($git);
-    my $reduced_branch = $opts->{prefix} . $opts->{branch};
-    unless($opts->{no_delete}) {
-        if (exists($branches->{$reduced_branch})) {
-            say "Deleting branch '$reduced_branch'" if $opts->{verbose};
-            $git->branch('-D', $reduced_branch);
-        }
-    }
-    if ($opts->{verbose}) {
-        say "Current branches:";
-        dump_branches($git);
-    }
-    
-    {
-        local $@;
-        eval { $git->checkout('-b', $reduced_branch); };
-        croak($@) if $@;
-        say "Creating branch '$reduced_branch'" if $opts->{verbose};
-    }
-    
-    my @tfiles = ();
-    sub wanted {
-        $_ =~ m/\.t$/ and push(@tfiles, $File::Find::name);
-    }
-    find(\&wanted, $opts->{dir});
-    
-    if ($opts->{verbose}) {
-        say "Test files:";
-        say Dumper [ sort @tfiles ];
-        if ($opts->{include}) {
-            say "Included test files:";
-            say Dumper(\@includes);
-        }
-        if ($opts->{exclude}) {
-            say "Excluded test files:";
-            say Dumper(\@excludes);
-        }
-    }
-    my %included = map { +qq{$opts->{dir}/$_} => 1 } @includes;
-    my %excluded = map { +qq{$opts->{dir}/$_} => 1 } @excludes;
-    my @removed = ();
-    if ($opts->{include}) {
-        @removed = grep { ! exists($included{$_}) } sort @tfiles;
-    }
-    if ($opts->{exclude}) {
-        @removed = grep { exists($excluded{$_}) } sort @tfiles;
-    }
-    if ($opts->{verbose}) {
-        say "Test files to be removed:";
-        say Dumper(\@removed);
-    }
-    
-    $git->rm(@removed);
-    $git->commit( '-m', "Remove unwanted test files" );
-    unless ($opts->{no_push}) {
-        local $@;
-        eval { $git->push($opts->{remote}, "+$reduced_branch"); };
-        croak($@) if $@;
-        say "Pushing '$reduced_branch' to $opts->{remote}"
-            if $opts->{verbose};
-    }
-    say "Finished!" if $opts->{verbose};
+    return bless \%data, $class;
 }
 
+#sub prepare_reduced_branch {
+#    my $self = shift;
+#
+#    # reduced_branch:  temporary branch whose test suite has been reduced in
+#    # size
+#    # Compose name for reduced_branch
+#    my $branches = get_branches($self->{git});
+#    my $reduced_branch = $params->{prefix} . $params->{branch};
+#
+#    # Customarily, delete any existing branch with temporary branch's name.
+#    unless($params->{no_delete}) {
+#        if (exists($branches->{$reduced_branch})) {
+#            say "Deleting branch '$reduced_branch'" if $params->{verbose};
+#            $self->{git}->branch('-D', $reduced_branch);
+#        }
+#    }
+#    if ($params->{verbose}) {
+#        say "Current branches:";
+#        dump_branches($self->{git});
+#    }
+#    
+#    # Create the reduced branch.
+#    {
+#        local $@;
+#        eval { $self->{git}->checkout('-b', $reduced_branch); };
+#        croak($@) if $@;
+#        say "Creating branch '$reduced_branch'" if $params->{verbose};
+#    }
+#    
+#    # Locate all test files.
+#    my @tfiles = ();
+#    find( sub { $_ =~ m/\.t$/ and push(@tfiles, $File::Find::name) }, $params->{dir});
+#    
+#    my @includes = split(',' => $params->{include}) if $params->{include};
+#    my @excludes = split(',' => $params->{exclude}) if $params->{exclude};
+#    if ($params->{verbose}) {
+#        say "Test files:";
+#        say Dumper [ sort @tfiles ];
+#        if ($params->{include}) {
+#            say "Included test files:";
+#            say Dumper(\@includes);
+#        }
+#        if ($params->{exclude}) {
+#            say "Excluded test files:";
+#            say Dumper(\@excludes);
+#        }
+#    }
+#    # Create lookup tables for test files to be included in, 
+#    # or excluded from, the reduced branch.
+#    my %included = map { +qq{$params->{dir}/$_} => 1 } @includes;
+#    my %excluded = map { +qq{$params->{dir}/$_} => 1 } @excludes;
+#    my @removed = ();
+#    if ($params->{include}) {
+#        @removed = grep { ! exists($included{$_}) } sort @tfiles;
+#    }
+#    if ($params->{exclude}) {
+#        @removed = grep { exists($excluded{$_}) } sort @tfiles;
+#    }
+#    if ($params->{verbose}) {
+#        say "Test files to be removed:";
+#        say Dumper(\@removed);
+#    }
+#    
+#    # Remove undesired teste files and commit the reduced branch.
+#    $self->{git}->rm(@removed);
+#    $self->{git}->commit( '-m', "Remove unwanted test files" );
+##    return ($self->{git}, $reduced_branch);
+#    return ($reduced_branch);
+#}
+#
+#sub push_to_remote {
+##    my ($params, $git, $reduced_branch) = @_;
+#    my ($self, $reduced_branch) = @_;
+#    unless ($params->{no_push}) {
+#        local $@;
+#        eval { $git->push($params->{remote}, "+$reduced_branch"); };
+#        croak($@) if $@;
+#        say "Pushing '$reduced_branch' to $params->{remote}"
+#            if $params->{verbose};
+#    }
+#    say "Finished!" if $params->{verbose};
+#}
 ##### INTERNAL SUBROUTINES #####
 
 sub get_branches {
@@ -119,10 +143,10 @@ sub dump_branches {
 }
 
 sub check_status {
-    my ($git, $opts) = @_;
+    my ($git, $params) = @_;
     my $statuses = $git->status;
     if (! $statuses->is_dirty) {
-        say "git status okay" if $opts->{verbose};
+        say "git status okay" if $params->{verbose};
         return 1;
     }
     my $msg = '';
@@ -142,4 +166,3 @@ sub check_status {
 }
 
 1;
-
