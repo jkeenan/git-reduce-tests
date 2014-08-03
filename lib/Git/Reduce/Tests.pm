@@ -61,8 +61,19 @@ sub prepare_reduced_branch {
     my @tfiles = ();
     find( sub { $_ =~ m/\.t$/ and push(@tfiles, $File::Find::name) }, $self->{params}->{dir});
     
-    my @includes = split(',' => $self->{params}->{include}) if $self->{params}->{include};
-    my @excludes = split(',' => $self->{params}->{exclude}) if $self->{params}->{exclude};
+#    my @includes = split(',' => $self->{params}->{include}) if $self->{params}->{include};
+#    my @excludes = split(',' => $self->{params}->{exclude}) if $self->{params}->{exclude};
+    my (@includes, @excludes);
+    if ($self->{params}->{include}) {
+        @includes = split(',' => $self->{params}->{include});
+        croak("Did not specify test files to be included in reduced branch")
+            unless @includes;
+    }
+    if ($self->{params}->{exclude}) {
+        @excludes = split(',' => $self->{params}->{exclude});
+        croak("Did not specify test files to be exclude from reduced branch")
+            unless @excludes;
+    }
     if ($self->{params}->{verbose}) {
         say "Test files:";
         say Dumper [ sort @tfiles ];
@@ -78,8 +89,8 @@ sub prepare_reduced_branch {
     # Create lookup tables for test files to be included in, 
     # or excluded from, the reduced branch.
     my %included = map { +qq{$self->{params}->{dir}/$_} => 1 } @includes;
-say STDERR "XXX:";
-say STDERR Dumper \%included;
+#say STDERR "XXX:";
+#say STDERR Dumper \%included;
     my %excluded = map { +qq{$self->{params}->{dir}/$_} => 1 } @excludes;
     my @removed = ();
     if ($self->{params}->{include}) {
