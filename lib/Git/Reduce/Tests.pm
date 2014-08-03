@@ -35,16 +35,16 @@ sub prepare_reduced_branch {
     # size
     # Compose name for reduced_branch
     my $branches = get_branches($self->{git});
-    my $reduced_branch = $params->{prefix} . $params->{branch};
+    my $reduced_branch = $self->{params}->{prefix} . $self->{params}->{branch};
 
     # Customarily, delete any existing branch with temporary branch's name.
-    unless($params->{no_delete}) {
+    unless($self->{params}->{no_delete}) {
         if (exists($branches->{$reduced_branch})) {
-            say "Deleting branch '$reduced_branch'" if $params->{verbose};
+            say "Deleting branch '$reduced_branch'" if $self->{params}->{verbose};
             $self->{git}->branch('-D', $reduced_branch);
         }
     }
-    if ($params->{verbose}) {
+    if ($self->{params}->{verbose}) {
         say "Current branches:";
         dump_branches($self->{git});
     }
@@ -54,39 +54,39 @@ sub prepare_reduced_branch {
         local $@;
         eval { $self->{git}->checkout('-b', $reduced_branch); };
         croak($@) if $@;
-        say "Creating branch '$reduced_branch'" if $params->{verbose};
+        say "Creating branch '$reduced_branch'" if $self->{params}->{verbose};
     }
     
     # Locate all test files.
     my @tfiles = ();
-    find( sub { $_ =~ m/\.t$/ and push(@tfiles, $File::Find::name) }, $params->{dir});
+    find( sub { $_ =~ m/\.t$/ and push(@tfiles, $File::Find::name) }, $self->{params}->{dir});
     
-    my @includes = split(',' => $params->{include}) if $params->{include};
-    my @excludes = split(',' => $params->{exclude}) if $params->{exclude};
-    if ($params->{verbose}) {
+    my @includes = split(',' => $self->{params}->{include}) if $self->{params}->{include};
+    my @excludes = split(',' => $self->{params}->{exclude}) if $self->{params}->{exclude};
+    if ($self->{params}->{verbose}) {
         say "Test files:";
         say Dumper [ sort @tfiles ];
-        if ($params->{include}) {
+        if ($self->{params}->{include}) {
             say "Included test files:";
             say Dumper(\@includes);
         }
-        if ($params->{exclude}) {
+        if ($self->{params}->{exclude}) {
             say "Excluded test files:";
             say Dumper(\@excludes);
         }
     }
     # Create lookup tables for test files to be included in, 
     # or excluded from, the reduced branch.
-    my %included = map { +qq{$params->{dir}/$_} => 1 } @includes;
-    my %excluded = map { +qq{$params->{dir}/$_} => 1 } @excludes;
+    my %included = map { +qq{$self->{params}->{dir}/$_} => 1 } @includes;
+    my %excluded = map { +qq{$self->{params}->{dir}/$_} => 1 } @excludes;
     my @removed = ();
-    if ($params->{include}) {
+    if ($self->{params}->{include}) {
         @removed = grep { ! exists($included{$_}) } sort @tfiles;
     }
-    if ($params->{exclude}) {
+    if ($self->{params}->{exclude}) {
         @removed = grep { exists($excluded{$_}) } sort @tfiles;
     }
-    if ($params->{verbose}) {
+    if ($self->{params}->{verbose}) {
         say "Test files to be removed:";
         say Dumper(\@removed);
     }
