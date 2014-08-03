@@ -9,7 +9,7 @@ use Data::Dumper;$Data::Dumper::Indent=1;
 use Cwd;
 
 my $params = {};
-my @include_args = ("--include", "t/001-load.t"); 
+my @include_args = ("--include", "xt/git/001-load.t"); 
 
 {
     local @ARGV = (@include_args);
@@ -17,5 +17,4 @@ my @include_args = ("--include", "t/001-load.t");
     my $self = Git::Reduce::Tests->new($params);
     ok(defined($self), "new() returned defined value");
     isa_ok($self, 'Git::Reduce::Tests');
-#    say STDERR Dumper($self);
 }
