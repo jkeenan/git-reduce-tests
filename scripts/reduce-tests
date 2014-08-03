@@ -16,6 +16,8 @@ my $params = process_options();
 
 my $self = Git::Reduce::Tests->new($params);
 say Dumper $self;
+my $reduced_branch = $self->prepare_reduced_branch();
+say "reduced_branch: $reduced_branch";
 
 exit 0;
 

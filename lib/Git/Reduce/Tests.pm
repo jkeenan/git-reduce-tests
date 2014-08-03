@@ -28,76 +28,76 @@ sub new {
     return bless \%data, $class;
 }
 
-#sub prepare_reduced_branch {
-#    my $self = shift;
-#
-#    # reduced_branch:  temporary branch whose test suite has been reduced in
-#    # size
-#    # Compose name for reduced_branch
-#    my $branches = get_branches($self->{git});
-#    my $reduced_branch = $params->{prefix} . $params->{branch};
-#
-#    # Customarily, delete any existing branch with temporary branch's name.
-#    unless($params->{no_delete}) {
-#        if (exists($branches->{$reduced_branch})) {
-#            say "Deleting branch '$reduced_branch'" if $params->{verbose};
-#            $self->{git}->branch('-D', $reduced_branch);
-#        }
-#    }
-#    if ($params->{verbose}) {
-#        say "Current branches:";
-#        dump_branches($self->{git});
-#    }
-#    
-#    # Create the reduced branch.
-#    {
-#        local $@;
-#        eval { $self->{git}->checkout('-b', $reduced_branch); };
-#        croak($@) if $@;
-#        say "Creating branch '$reduced_branch'" if $params->{verbose};
-#    }
-#    
-#    # Locate all test files.
-#    my @tfiles = ();
-#    find( sub { $_ =~ m/\.t$/ and push(@tfiles, $File::Find::name) }, $params->{dir});
-#    
-#    my @includes = split(',' => $params->{include}) if $params->{include};
-#    my @excludes = split(',' => $params->{exclude}) if $params->{exclude};
-#    if ($params->{verbose}) {
-#        say "Test files:";
-#        say Dumper [ sort @tfiles ];
-#        if ($params->{include}) {
-#            say "Included test files:";
-#            say Dumper(\@includes);
-#        }
-#        if ($params->{exclude}) {
-#            say "Excluded test files:";
-#            say Dumper(\@excludes);
-#        }
-#    }
-#    # Create lookup tables for test files to be included in, 
-#    # or excluded from, the reduced branch.
-#    my %included = map { +qq{$params->{dir}/$_} => 1 } @includes;
-#    my %excluded = map { +qq{$params->{dir}/$_} => 1 } @excludes;
-#    my @removed = ();
-#    if ($params->{include}) {
-#        @removed = grep { ! exists($included{$_}) } sort @tfiles;
-#    }
-#    if ($params->{exclude}) {
-#        @removed = grep { exists($excluded{$_}) } sort @tfiles;
-#    }
-#    if ($params->{verbose}) {
-#        say "Test files to be removed:";
-#        say Dumper(\@removed);
-#    }
-#    
-#    # Remove undesired teste files and commit the reduced branch.
-#    $self->{git}->rm(@removed);
-#    $self->{git}->commit( '-m', "Remove unwanted test files" );
-##    return ($self->{git}, $reduced_branch);
-#    return ($reduced_branch);
-#}
-#
+sub prepare_reduced_branch {
+    my $self = shift;
+
+    # reduced_branch:  temporary branch whose test suite has been reduced in
+    # size
+    # Compose name for reduced_branch
+    my $branches = get_branches($self->{git});
+    my $reduced_branch = $params->{prefix} . $params->{branch};
+
+    # Customarily, delete any existing branch with temporary branch's name.
+    unless($params->{no_delete}) {
+        if (exists($branches->{$reduced_branch})) {
+            say "Deleting branch '$reduced_branch'" if $params->{verbose};
+            $self->{git}->branch('-D', $reduced_branch);
+        }
+    }
+    if ($params->{verbose}) {
+        say "Current branches:";
+        dump_branches($self->{git});
+    }
+    
+    # Create the reduced branch.
+    {
+        local $@;
+        eval { $self->{git}->checkout('-b', $reduced_branch); };
+        croak($@) if $@;
+        say "Creating branch '$reduced_branch'" if $params->{verbose};
+    }
+    
+    # Locate all test files.
+    my @tfiles = ();
+    find( sub { $_ =~ m/\.t$/ and push(@tfiles, $File::Find::name) }, $params->{dir});
+    
+    my @includes = split(',' => $params->{include}) if $params->{include};
+    my @excludes = split(',' => $params->{exclude}) if $params->{exclude};
+    if ($params->{verbose}) {
+        say "Test files:";
+        say Dumper [ sort @tfiles ];
+        if ($params->{include}) {
+            say "Included test files:";
+            say Dumper(\@includes);
+        }
+        if ($params->{exclude}) {
+            say "Excluded test files:";
+            say Dumper(\@excludes);
+        }
+    }
+    # Create lookup tables for test files to be included in, 
+    # or excluded from, the reduced branch.
+    my %included = map { +qq{$params->{dir}/$_} => 1 } @includes;
+    my %excluded = map { +qq{$params->{dir}/$_} => 1 } @excludes;
+    my @removed = ();
+    if ($params->{include}) {
+        @removed = grep { ! exists($included{$_}) } sort @tfiles;
+    }
+    if ($params->{exclude}) {
+        @removed = grep { exists($excluded{$_}) } sort @tfiles;
+    }
+    if ($params->{verbose}) {
+        say "Test files to be removed:";
+        say Dumper(\@removed);
+    }
+    
+    # Remove undesired teste files and commit the reduced branch.
+    $self->{git}->rm(@removed);
+    $self->{git}->commit( '-m', "Remove unwanted test files" );
+#    return ($self->{git}, $reduced_branch);
+    return ($reduced_branch);
+}
+
 #sub push_to_remote {
 ##    my ($params, $git, $reduced_branch) = @_;
 #    my ($self, $reduced_branch) = @_;
