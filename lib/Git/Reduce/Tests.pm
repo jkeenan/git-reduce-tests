@@ -122,7 +122,7 @@ sub push_to_remote {
 ##### INTERNAL METHODS #####
 
 sub _get_branches {
-    my $self->{git} = shift;
+    my $self = shift;
     my @branches = $self->{git}->branch;
     my %branches;
     
