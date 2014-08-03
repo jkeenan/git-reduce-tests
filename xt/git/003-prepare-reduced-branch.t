@@ -31,6 +31,6 @@ isa_ok($self, 'Git::Reduce::Tests');
 
 my $reduced_branch;
 eval { $reduced_branch = $self->prepare_reduced_branch(); };
-ok(! $@, "prepare_reduced_branch() had no errors");
+ok(! $@, "prepare_reduced_branch() had no errors") or diag($@);
 is($reduced_branch, "$prefix$start_branch",
     "Got expected name for reduced branch");
