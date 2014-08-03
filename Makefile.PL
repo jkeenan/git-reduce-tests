@@ -9,6 +9,7 @@ WriteMakefile(
     AUTHOR       => 'James E Keenan (jkeenan@cpan.org)',
     ABSTRACT     => 'Create a branch with fewer test files for faster development',
     MIN_PERL_VERSION => '5.10.0',
+    EXE_FILES    => [ 'scripts/reduce-tests' ],
     PREREQ_PM    => {
                      'Carp' => 0,
                      'Cwd' => 0,
