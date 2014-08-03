@@ -1,0 +1,15 @@
+#!/usr/bin/perl
+#$Id$
+# reduce-tests:  command-line utility implementing Git::Reduce::Tests
+eval 'exec /usr/local/bin/perl  -S $0 ${1+"$@"}'
+  if 0;    # not running under some shell
+use strict;
+use warnings;
+use Git::Reduce::Tests qw( run );
+use Git::Reduce::Tests::Opts qw( process_options );
+#use Data::Dumper;$Data::Dumper::Indent=1;
+
+my $opts = process_options();
+run($opts);
+exit 0;
+

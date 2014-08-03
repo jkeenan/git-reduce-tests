@@ -1,0 +1,15 @@
+.gitignore
+Changes
+lib/Git/Reduce/Tests.pm
+lib/Git/Reduce/Tests/Opts.pm
+LICENSE
+Makefile.PL
+MANIFEST
+MANIFEST.SKIP
+MYMETA.json
+MYMETA.yml
+README
+README.md
+scripts/reduce-tests
+t/001_load.t
+t/002-options.t
