@@ -19,8 +19,7 @@ sub new {
     $data{git} = Git::Wrapper->new($params->{dir});
     
     # Make sure we can check out the branch needing testing.
-#    check_status($data->{git}, $params);
-    check_status($data{git}, $data{params});
+    check_status(\%data);
     {
         local $@;
         eval {$data{git}->checkout($data{params}->{branch}) };
@@ -143,10 +142,11 @@ sub dump_branches {
 }
 
 sub check_status {
-    my ($git, $params) = @_;
-    my $statuses = $git->status;
+#    my ($git, $params) = @_;
+    my $dataref = shift;
+    my $statuses = $dataref->{git}->status;
     if (! $statuses->is_dirty) {
-        say "git status okay" if $params->{verbose};
+        say "git status okay" if $dataref->{params}->{verbose};
         return 1;
     }
     my $msg = '';
