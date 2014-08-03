@@ -12,4 +12,5 @@ README
 README.md
 scripts/reduce-tests
 t/001-load.t
+t/001-options.t
 t/002-options.t
