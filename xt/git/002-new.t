@@ -17,5 +17,5 @@ my @include_args = ("--include", "t/001-load.t");
     my $self = Git::Reduce::Tests->new($params);
     ok(defined($self), "new() returned defined value");
     isa_ok($self, 'Git::Reduce::Tests');
-    say STDERR Dumper($self);
+#    say STDERR Dumper($self);
 }
