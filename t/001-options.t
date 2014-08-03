@@ -7,7 +7,7 @@ use Data::Dumper;$Data::Dumper::Indent=1;
 use feature 'say';
 use Cwd;
 
-my ($params);
+my $params = {};
 my @include_args = ("--include", "t/001-load.t"); 
 
 {

@@ -2,8 +2,6 @@ package Git::Reduce::Tests;
 use strict;
 use feature 'say';
 our $VERSION = '0.01';
-#our @ISA = qw( Exporter );
-#our @EXPORT_OK = qw( run push_to_remote );
 use Git::Wrapper;
 use Carp;
 use Data::Dumper;$Data::Dumper::Indent=1;
@@ -34,7 +32,7 @@ sub prepare_reduced_branch {
     # reduced_branch:  temporary branch whose test suite has been reduced in
     # size
     # Compose name for reduced_branch
-    my $branches = get_branches($self->{git});
+    my $branches = $self->_get_branches();
     my $reduced_branch = $self->{params}->{prefix} . $self->{params}->{branch};
 
     # Customarily, delete any existing branch with temporary branch's name.
@@ -46,7 +44,7 @@ sub prepare_reduced_branch {
     }
     if ($self->{params}->{verbose}) {
         say "Current branches:";
-        dump_branches($self->{git});
+        $self->_dump_branches();
     }
     
     # Create the reduced branch.
@@ -59,7 +57,10 @@ sub prepare_reduced_branch {
     
     # Locate all test files.
     my @tfiles = ();
-    find( sub { $_ =~ m/\.t$/ and push(@tfiles, $File::Find::name) }, $self->{params}->{dir});
+    find(
+        sub { $_ =~ m/\.t$/ and push(@tfiles, $File::Find::name) },
+        $self->{params}->{dir}
+    );
     
     my (@includes, @excludes);
     if ($self->{params}->{include}) {
@@ -117,11 +118,12 @@ sub push_to_remote {
     }
     say "Finished!" if $self->{params}->{verbose};
 }
-##### INTERNAL SUBROUTINES #####
 
-sub get_branches {
-    my $git = shift;
-    my @branches = $git->branch;
+##### INTERNAL METHODS #####
+
+sub _get_branches {
+    my $self->{git} = shift;
+    my @branches = $self->{git}->branch;
     my %branches;
     
     for (@branches) {
@@ -142,14 +144,15 @@ sub get_branches {
     return \%branches;
 }
 
-sub dump_branches {
-    my $git = shift;
-    my $branches = get_branches($git);
+sub _dump_branches {
+    my $self = shift;
+    my $branches = $self->get_branches();
     say Dumper $branches;
 }
 
+##### INTERNAL SUBROUTINE #####
+
 sub check_status {
-#    my ($git, $params) = @_;
     my $dataref = shift;
     my $statuses = $dataref->{git}->status;
     if (! $statuses->is_dirty) {
