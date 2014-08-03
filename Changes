@@ -1,6 +1,8 @@
 Revision history for Perl module Git::Reduce::Tests
 
 0.01 Sat Aug  2 20:55:45 2014
-    - original version; created by ExtUtils::ModuleMaker 0.52
+    - Original version; created by ExtUtils::ModuleMaker 0.52
 
+0.02 Sun Aug  3 18:58:38 EDT 2014
+    - Improved documentation.
 
