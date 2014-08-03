@@ -11,5 +11,5 @@ MYMETA.yml
 README
 README.md
 scripts/reduce-tests
-t/001_load.t
+t/001-load.t
 t/002-options.t
