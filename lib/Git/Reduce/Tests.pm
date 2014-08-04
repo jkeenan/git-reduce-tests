@@ -1,7 +1,7 @@
 package Git::Reduce::Tests;
 use strict;
 use feature 'say';
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 use Git::Wrapper;
 use Carp;
 use Data::Dumper;$Data::Dumper::Indent=1;

@@ -19,11 +19,11 @@ __END__
 
 =head1 NAME
 
-reduce-options - Create a branch with fewer test files for faster development
+reduce-tests - Create a branch with fewer test files for faster development
 
 =head1 SYNOPSIS
 
-  reduce-options \
+  reduce-tests \
     --dir=/path/to/git/workdir \
     --include=t/90-load.t,t/91-unload.t \
     --branch=master \
@@ -33,7 +33,7 @@ reduce-options - Create a branch with fewer test files for faster development
 
 =head1 DESCRIPTION
 
-F<reduce-options> is a command-line utility which will be useful in the
+F<reduce-tests> is a command-line utility which will be useful in the
 following situation:
 
 =over 4
@@ -53,7 +53,7 @@ You wish to run only a subset of those tests.
 
 =back
 
-F<reduce-options> enables you to copy a branch, remove files from that
+F<reduce-tests> enables you to copy a branch, remove files from that
 branch's test suite and run that reduced test suite.  The test suite may be
 reduced either by:
 

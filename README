@@ -1,9 +1,9 @@
 NAME
-    reduce-options - Create a branch with fewer test files for faster
+    reduce-tests - Create a branch with fewer test files for faster
     development
 
 SYNOPSIS
-      reduce-options \
+      reduce-tests \
         --dir=/path/to/git/workdir \
         --include=t/90-load.t,t/91-unload.t \
         --branch=master \
@@ -12,7 +12,7 @@ SYNOPSIS
         --verbose
 
 DESCRIPTION
-    reduce-options is a command-line utility which will be useful in the
+    reduce-tests is a command-line utility which will be useful in the
     following situation:
 
     *   You have a Perl library stored in a git repository.
@@ -22,7 +22,7 @@ DESCRIPTION
 
     *   You wish to run only a subset of those tests.
 
-    reduce-options enables you to copy a branch, remove files from that
+    reduce-tests enables you to copy a branch, remove files from that
     branch's test suite and run that reduced test suite. The test suite may
     be reduced either by:
 

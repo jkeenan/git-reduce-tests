@@ -6,3 +6,5 @@ Revision history for Perl module Git::Reduce::Tests
 0.02 Sun Aug  3 18:58:38 EDT 2014
     - Improved documentation.
 
+0.03 Mon Aug  4 18:47:32 EDT 2014
+    - Corrected error in name of executable in multiple locations
