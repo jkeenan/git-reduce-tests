@@ -29,6 +29,7 @@ sub process_options {
        'exclude' => '',
        'verbose' => 0,
        'no_push' => 0,
+       'test_suffix' => 't',
    );
     
     my %opts;
@@ -44,6 +45,8 @@ sub process_options {
         "verbose"  => \$opts{verbose}, # flag
         "no-push"  => \$opts{no_push}, # flag
         "no_push"  => \$opts{no_push}, # flag
+        "test-suffix=s"  => \$opts{test_suffix},
+        "test_suffix=s"  => \$opts{test_suffix},
     ) or croak("Error in command line arguments\n");
     if ($opts{verbose}) {
         print "Command-line arguments:\n";

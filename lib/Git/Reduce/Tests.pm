@@ -133,7 +133,7 @@ sub prepare_reduced_branch {
     # Locate all test files.
     my @tfiles = ();
     find(
-        sub { $_ =~ m/\.t$/ and push(@tfiles, $File::Find::name) },
+        sub { $_ =~ m/\.$self->{params}->{test_suffix}$/ and push(@tfiles, $File::Find::name) },
         $self->{params}->{dir}
     );
 
