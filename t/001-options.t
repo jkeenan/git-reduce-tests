@@ -4,7 +4,6 @@ use warnings;
 use Test::More qw(no_plan);
 use Git::Reduce::Tests::Opts qw(process_options);
 use Data::Dumper;$Data::Dumper::Indent=1;
-use feature 'say';
 use Cwd;
 
 my $params = {};

@@ -1,7 +1,6 @@
 package Git::Reduce::Tests;
 use strict;
-use feature 'say';
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 use Git::Wrapper;
 use Carp;
 use Data::Dumper;$Data::Dumper::Indent=1;
@@ -114,12 +113,12 @@ sub prepare_reduced_branch {
     # Customarily, delete any existing branch with temporary branch's name.
     unless($self->{params}->{no_delete}) {
         if (exists($branches->{$reduced_branch})) {
-            say "Deleting branch '$reduced_branch'" if $self->{params}->{verbose};
+            print "Deleting branch '$reduced_branch'\n" if $self->{params}->{verbose};
             $self->{git}->branch('-D', $reduced_branch);
         }
     }
     if ($self->{params}->{verbose}) {
-        say "Current branches:";
+        print "Current branches:\n";
         $self->_dump_branches();
     }
 
@@ -128,7 +127,7 @@ sub prepare_reduced_branch {
         local $@;
         eval { $self->{git}->checkout('-b', $reduced_branch); };
         croak($@) if $@;
-        say "Creating branch '$reduced_branch'" if $self->{params}->{verbose};
+        print "Creating branch '$reduced_branch'\n" if $self->{params}->{verbose};
     }
 
     # Locate all test files.
@@ -150,15 +149,15 @@ sub prepare_reduced_branch {
             unless @excludes;
     }
     if ($self->{params}->{verbose}) {
-        say "Test files:";
-        say Dumper [ sort @tfiles ];
+        print "Test files:\n";
+        print Dumper [ sort @tfiles ];
         if ($self->{params}->{include}) {
-            say "Included test files:";
-            say Dumper(\@includes);
+            print "Included test files:\n";
+            print Dumper(\@includes);
         }
         if ($self->{params}->{exclude}) {
-            say "Excluded test files:";
-            say Dumper(\@excludes);
+            print "Excluded test files:\n";
+            print Dumper(\@excludes);
         }
     }
     # Create lookup tables for test files to be included in,
@@ -173,8 +172,8 @@ sub prepare_reduced_branch {
         @removed = grep { exists($excluded{$_}) } sort @tfiles;
     }
     if ($self->{params}->{verbose}) {
-        say "Test files to be removed:";
-        say Dumper(\@removed);
+        print "Test files to be removed:\n";
+        print Dumper(\@removed);
     }
 
     # Remove undesired teste files and commit the reduced branch.
@@ -215,10 +214,10 @@ sub push_to_remote {
         local $@;
         eval { $self->{git}->push($self->{params}->{remote}, "+$reduced_branch"); };
         croak($@) if $@;
-        say "Pushing '$reduced_branch' to $self->{params}->{remote}"
+        print "Pushing '$reduced_branch' to $self->{params}->{remote}\n"
             if $self->{params}->{verbose};
     }
-    say "Finished!" if $self->{params}->{verbose};
+    print "Finished!\n" if $self->{params}->{verbose};
 }
 
 ##### INTERNAL METHODS #####
@@ -249,7 +248,7 @@ sub _get_branches {
 sub _dump_branches {
     my $self = shift;
     my $branches = $self->_get_branches();
-    say Dumper $branches;
+    print Dumper $branches;
 }
 
 ##### INTERNAL SUBROUTINE #####
@@ -258,7 +257,7 @@ sub check_status {
     my $dataref = shift;
     my $statuses = $dataref->{git}->status;
     if (! $statuses->is_dirty) {
-        say "git status okay" if $dataref->{params}->{verbose};
+        print "git status okay\n" if $dataref->{params}->{verbose};
         return 1;
     }
     my $msg = '';

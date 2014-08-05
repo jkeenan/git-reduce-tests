@@ -1,7 +1,6 @@
 package Git::Reduce::Tests::Opts;
 use strict;
 use warnings;
-use feature 'say';
 use base qw( Exporter );
 our @EXPORT_OK = qw(
     process_options
@@ -16,8 +15,8 @@ sub process_options {
         unless (@_ % 2 == 0);
     my %args = @_;
     if ($args{verbose}) {
-        say "Arguments provided to process_options():";
-        say Dumper \%args;
+        print "Arguments provided to process_options():\n";
+        print Dumper \%args;
     }
 
     my %defaults = (
@@ -47,8 +46,8 @@ sub process_options {
         "no_push"  => \$opts{no_push}, # flag
     ) or croak("Error in command line arguments\n");
     if ($opts{verbose}) {
-        say "Command-line arguments:";
-        say Dumper \%opts;
+        print "Command-line arguments:\n";
+        print Dumper \%opts;
     }
 
     # Final selection of params starts with defaults.

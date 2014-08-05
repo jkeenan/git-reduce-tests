@@ -1,7 +1,6 @@
 # !perl
 use strict;
 use warnings;
-use 5.10.1;
 use Test::More qw(no_plan);
 use Git::Reduce::Tests;
 use Git::Reduce::Tests::Opts qw(process_options);

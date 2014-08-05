@@ -4,7 +4,6 @@ eval 'exec /usr/local/bin/perl  -S $0 ${1+"$@"}'
   if 0;    # not running under some shell
 use strict;
 use warnings;
-use 5.10.1;
 use Git::Reduce::Tests;
 use Git::Reduce::Tests::Opts qw( process_options );
 
