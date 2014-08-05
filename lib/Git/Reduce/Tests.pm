@@ -291,7 +291,7 @@ or through the web interface at L<http://rt.cpan.org>.
 James E. Keenan (jkeenan@cpan.org).  When sending correspondence, please
 include 'reduce-tests' or 'Git-Reduce-Tests' in your subject line.
 
-Creation date:  August 03 2014. Last modification date:  August 03 2014.
+Creation date:  August 03 2014. Last modification date:  August 04 2014.
 
 Development repository: L<https://github.com/jkeenan/git-reduce-tests>
 

@@ -48,7 +48,8 @@ DESCRIPTION
         the test suite you need to focus on at a given moment.
 
 IMPLEMENTATION
-    reduce-tests is implemented by CPAN distribution Git-Reduce-Tests.
+    reduce-tests is implemented by CPAN distribution Git-Reduce-Tests.  The
+    minimum version of Perl needed to run this code is 5.6.0.
 
 BUGS
     There are no bug reports outstanding as of the most recent CPAN upload
@@ -62,7 +63,7 @@ AUTHOR
     James E. Keenan (jkeenan@cpan.org). When sending correspondence, please
     include 'reduce-tests' or 'Git-Reduce-Tests' in your subject line.
 
-    Creation date: August 03 2014. Last modification date: August 03 2014.
+    Creation date: August 03 2014. Last modification date: August 04 2014.
 
     Development repository: <https://github.com/jkeenan/git-reduce-tests>
 
