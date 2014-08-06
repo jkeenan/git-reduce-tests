@@ -1,5 +1,7 @@
 TODO list for Perl module Git::Reduce::Tests
 
-- Nothing yet
+Tues night: Released v0.05.  Since we can now get coverage stats on
+prepare_reduced_branch(), write additional tests.  Up $VERSION and modify
+Changes; then release v0.06.
 
 
