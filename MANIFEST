@@ -9,6 +9,7 @@ MANIFEST.SKIP
 MYMETA.json
 MYMETA.yml
 README
-README.md
 scripts/reduce-tests
 t/001-options.t
+t/002-load.t
+t/003-new.t

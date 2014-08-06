@@ -20,13 +20,18 @@ Git::Reduce::Tests -  Create a branch with fewer test files for faster developme
 
 =head1 DESCRIPTION
 
-Git::Reduce::Tests holds the implementation for command-line utility F<reduce-tests>, which is stored in this distribution's F<scripts/> directory.  See that program's documentation (available after installation via C<perldoc reduce-tests>) or the F<README> for an explanation of that program's functionality.
+Git::Reduce::Tests holds the implementation for command-line utility
+F<reduce-tests>, which is stored in this distribution's F<scripts/> directory.
+See that program's documentation (available after installation via C<perldoc
+reduce-tests>) or the F<README> for an explanation of that program's
+functionality.
 
 This package exports no functions.
 
 =head1 METHODS
 
-Git::Reduce::Tests is currently structured as three publicly available methods intended to be called in sequence.
+Git::Reduce::Tests is currently structured as three publicly available methods
+intended to be called in sequence.
 
 =head2 C<new()>
 
@@ -80,9 +85,9 @@ sub new {
 =item * Purpose
 
 Creates a new branch whose name is that of the starting branch prepended with
-the value of the C<--prefix> option.  The prefix defaults to C<reduced_>.
-Then reduces the size of that branch's test suite either by specifying a
-limited number of files to be B<included> in the test suite -- the
+the value of the C<--prefix> option.  The prefix defaults to C<reduced_>.  The
+method then reduces the size of that branch's test suite either by specifying
+a limited number of files to be B<included> in the test suite -- the
 comma-delimited argument to the C<--include> option -- or by specifying those
 files to be B<excluded> from the test suite -- the comma-delimited argument to
 the C<--exclude> option.
@@ -108,12 +113,14 @@ sub prepare_reduced_branch {
     # size
     # Compose name for reduced_branch
     my $branches = $self->_get_branches();
-    my $reduced_branch = $self->{params}->{prefix} . $self->{params}->{branch};
+    my $reduced_branch =
+        $self->{params}->{prefix} . $self->{params}->{branch};
 
     # Customarily, delete any existing branch with temporary branch's name.
     unless($self->{params}->{no_delete}) {
         if (exists($branches->{$reduced_branch})) {
-            print "Deleting branch '$reduced_branch'\n" if $self->{params}->{verbose};
+            print "Deleting branch '$reduced_branch'\n"
+                if $self->{params}->{verbose};
             $self->{git}->branch('-D', $reduced_branch);
         }
     }
@@ -127,13 +134,17 @@ sub prepare_reduced_branch {
         local $@;
         eval { $self->{git}->checkout('-b', $reduced_branch); };
         croak($@) if $@;
-        print "Creating branch '$reduced_branch'\n" if $self->{params}->{verbose};
+        print "Creating branch '$reduced_branch'\n"
+            if $self->{params}->{verbose};
     }
 
     # Locate all test files.
     my @tfiles = ();
     find(
-        sub { $_ =~ m/\.$self->{params}->{test_suffix}$/ and push(@tfiles, $File::Find::name) },
+        sub {
+            $_ =~ m/\.$self->{params}->{test_suffix}$/ and
+                push(@tfiles, $File::Find::name)
+        },
         $self->{params}->{dir}
     );
 
