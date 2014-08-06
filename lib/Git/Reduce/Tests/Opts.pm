@@ -29,7 +29,7 @@ sub process_options {
        'exclude' => '',
        'verbose' => 0,
        'no_push' => 0,
-       'test_suffix' => 't',
+       'test_extension' => 't',
    );
     
     my %opts;
@@ -37,6 +37,7 @@ sub process_options {
         "dir=s" => \$opts{dir},
         "branch=s" => \$opts{branch},
         "prefix=s"  => \$opts{prefix},
+        "suffix=s"  => \$opts{suffix},
         "remote=s"  => \$opts{remote},
         "no-delete"  => \$opts{no_delete}, # flag
         "no_delete"  => \$opts{no_delete}, # flag
@@ -45,25 +46,43 @@ sub process_options {
         "verbose"  => \$opts{verbose}, # flag
         "no-push"  => \$opts{no_push}, # flag
         "no_push"  => \$opts{no_push}, # flag
-        "test-suffix=s"  => \$opts{test_suffix},
-        "test_suffix=s"  => \$opts{test_suffix},
+        "test-extension=s"  => \$opts{test_extension},
+        "test_extension=s"  => \$opts{test_extension},
     ) or croak("Error in command line arguments\n");
     if ($opts{verbose}) {
         print "Command-line arguments:\n";
         print Dumper \%opts;
     }
+    croak("Only one of '--prefix' or '--suffix' may be supplied")
+        if ( (length($opts{prefix})) and (length($opts{suffix})) );
 
     # Final selection of params starts with defaults.
     my %params = map { $_ => $defaults{$_} } keys %defaults;
 
     # Override with command-line arguments.
+    # If --suffix is supplied on command-line, any --prefix already present is
+    # deleted.
     for my $o (keys %opts) {
-        $params{$o} = $opts{$o} if defined $opts{$o};
+        if (defined $opts{$o}) {
+            if ($o eq 'suffix') {
+                delete $params{prefix};
+            }
+            $params{$o} = $opts{$o};
+        }
     }
     # Arguments provided directly to process_options() supersede command-line
     # arguments.  (Mainly used in testing of this module.)
+    # Again, if 'suffix' is supplied in @_, any 'prefix' already present is
+    # deleted.
+    croak("Only one of 'prefix' or 'suffix' may be supplied")
+        if ( (length($args{prefix})) and (length($args{suffix})) );
     for my $o (keys %args) {
-        $params{$o} = $args{$o} if defined $args{$o};
+        if (defined $args{$o}) {
+            if ($o eq 'suffix') {
+                delete $params{prefix};
+            }
+            $params{$o} = $args{$o};
+        }
     }
     
     croak("Could not locate directory $params{dir}")

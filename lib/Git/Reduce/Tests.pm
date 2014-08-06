@@ -1,6 +1,6 @@
 package Git::Reduce::Tests;
 use strict;
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 use Git::Wrapper;
 use Carp;
 use Data::Dumper;$Data::Dumper::Indent=1;
@@ -84,13 +84,16 @@ sub new {
 
 =item * Purpose
 
-Creates a new branch whose name is that of the starting branch prepended with
-the value of the C<--prefix> option.  The prefix defaults to C<reduced_>.  The
-method then reduces the size of that branch's test suite either by specifying
-a limited number of files to be B<included> in the test suite -- the
-comma-delimited argument to the C<--include> option -- or by specifying those
-files to be B<excluded> from the test suite -- the comma-delimited argument to
-the C<--exclude> option.
+Creates a new branch whose name is that of the starting branch either (a)
+prepended with the value of the C<--prefix> option or (b) appended with the
+value of the C<--suffix> option -- but not B<both> (a) and (b).  C<--prefix>
+is given preference and defaults to C<reduced_>.
+
+The method then reduces the size of that branch's test suite either by
+specifying a limited number of files to be B<included> in the test suite --
+the comma-delimited argument to the C<--include> option -- or by specifying
+those files to be B<excluded> from the test suite -- the comma-delimited
+argument to the C<--exclude> option.
 
 =item * Arguments
 
@@ -114,7 +117,9 @@ sub prepare_reduced_branch {
     # Compose name for reduced_branch
     my $branches = $self->_get_branches();
     my $reduced_branch =
-        $self->{params}->{prefix} . $self->{params}->{branch};
+        defined($self->{params}->{suffix})
+            ? $self->{params}->{branch} . $self->{params}->{suffix}
+            : $self->{params}->{prefix} . $self->{params}->{branch};
 
     # Customarily, delete any existing branch with temporary branch's name.
     unless($self->{params}->{no_delete}) {
@@ -142,7 +147,7 @@ sub prepare_reduced_branch {
     my @tfiles = ();
     find(
         sub {
-            $_ =~ m/\.$self->{params}->{test_suffix}$/ and
+            $_ =~ m/\.$self->{params}->{test_extension}$/ and
                 push(@tfiles, $File::Find::name)
         },
         $self->{params}->{dir}
@@ -187,7 +192,7 @@ sub prepare_reduced_branch {
         print Dumper(\@removed);
     }
 
-    # Remove undesired teste files and commit the reduced branch.
+    # Remove undesired test files and commit the reduced branch.
     $self->{git}->rm(@removed);
     $self->{git}->commit( '-m', "Remove unwanted test files" );
     return ($reduced_branch);
