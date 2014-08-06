@@ -11,3 +11,6 @@ Revision history for Perl module Git::Reduce::Tests
 
 0.04 Mon Aug  4 20:02:55 EDT 2014
     - Make usable by perl-5.6 forward.
+
+0.05 Tue Aug  5 21:18:19 EDT 2014
+    - Presuming presence of git, move 2 test files from xt/git to t.
