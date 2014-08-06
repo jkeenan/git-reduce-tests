@@ -12,5 +12,3 @@ README
 scripts/reduce-tests
 t/001-options.t
 t/002-load.t
-t/003-new.t
-t/004-prepare-reduced-branch.t

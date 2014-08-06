@@ -14,3 +14,7 @@ Revision history for Perl module Git::Reduce::Tests
 
 0.05 Tue Aug  5 21:18:19 EDT 2014
     - Presuming presence of git, move 2 test files from xt/git to t.
+
+0.06 Tue Aug  5 21:42:44 EDT 2014
+    - 0.05 fails when running tests while installing via cpanm.
+    - Move two files back from t/ to xt/git/.
