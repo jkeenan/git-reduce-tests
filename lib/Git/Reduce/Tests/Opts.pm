@@ -77,12 +77,10 @@ sub process_options {
     croak("Only one of 'prefix' or 'suffix' may be supplied")
         if ( (length($args{prefix})) and (length($args{suffix})) );
     for my $o (keys %args) {
-        if (defined $args{$o}) {
-            if ($o eq 'suffix') {
-                delete $params{prefix};
-            }
-            $params{$o} = $args{$o};
+        if ($o eq 'suffix') {
+            delete $params{prefix};
         }
+        $params{$o} = $args{$o};
     }
     
     croak("Could not locate directory $params{dir}")

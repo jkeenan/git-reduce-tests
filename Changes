@@ -21,3 +21,6 @@ Revision history for Perl module Git::Reduce::Tests
 
 0.07 Thu Aug  7 21:32:01 EDT 2014
     - Introduce '--suffix' option.
+
+0.08 Thu Aug  7 22:17:38 EDT 2014
+    - Eliminate one unreachable branch.
