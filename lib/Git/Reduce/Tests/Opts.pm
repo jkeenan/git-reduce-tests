@@ -36,8 +36,8 @@ sub process_options {
     GetOptions(
         "dir=s" => \$opts{dir},
         "branch=s" => \$opts{branch},
-        "prefix=s"  => \$opts{prefix},
-        "suffix=s"  => \$opts{suffix},
+        "prefix=s"  => \$opts{prefix} || '',
+        "suffix=s"  => \$opts{suffix} || '',
         "remote=s"  => \$opts{remote},
         "no-delete"  => \$opts{no_delete}, # flag
         "no_delete"  => \$opts{no_delete}, # flag

@@ -24,3 +24,6 @@ Revision history for Perl module Git::Reduce::Tests
 
 0.08 Thu Aug  7 22:17:38 EDT 2014
     - Eliminate one unreachable branch.
+
+0.09 Fri Aug 15 21:15:49 EDT 2014
+    - Make sure certain variables are initialized.
