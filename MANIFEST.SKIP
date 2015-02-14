@@ -32,3 +32,5 @@ svndiff/
 ^results
 ^htmlify
 .git/
+^MYMETA.*
+MYMETA.yml

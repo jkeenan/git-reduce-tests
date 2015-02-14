@@ -6,8 +6,6 @@ LICENSE
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
-MYMETA.json
-MYMETA.yml
 README
 scripts/reduce-tests
 t/001-options.t
