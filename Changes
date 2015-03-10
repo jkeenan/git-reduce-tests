@@ -27,3 +27,6 @@ Revision history for Perl module Git::Reduce::Tests
 
 0.09 Fri Aug 15 21:15:49 EDT 2014
     - Make sure certain variables are initialized.
+
+0.10 Mon Mar  9 21:23:17 EDT 2015
+    - Add metadata to Makefile.PL.

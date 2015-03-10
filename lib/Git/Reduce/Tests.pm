@@ -1,6 +1,6 @@
 package Git::Reduce::Tests;
 use strict;
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 use Git::Wrapper;
 use Carp;
 use Data::Dumper;$Data::Dumper::Indent=1;

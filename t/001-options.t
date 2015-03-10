@@ -1,9 +1,8 @@
 # !perl
 use strict;
 use warnings;
-use Test::More qw(no_plan); # tests => 29;
+use Test::More tests => 39;
 use Git::Reduce::Tests::Opts qw(process_options);
-use Data::Dumper;$Data::Dumper::Indent=1;
 use Cwd;
 
 my $params = {};
